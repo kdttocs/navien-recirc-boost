@@ -41,3 +41,11 @@ def test_off_and_days():
     assert day_number("Monday") == 2 and day_number("sat") == 7 and day_number(1) == 1
     with pytest.raises(ScheduleError):
         day_number("funday")
+
+
+def test_friendly_round_trip():
+    from custom_components.navien_recirc_boost.schedule import format_friendly
+    for text in ["6am-8am, 5:30pm-9pm", "7am-9:30am, 2pm-12am", "off"]:
+        assert format_friendly(parse_windows(text)) == text
+    assert parse_windows("6-8am") == [(6, 0, 8, 0)]
+    assert parse_windows("11-1pm") == [(11, 0, 13, 0)]

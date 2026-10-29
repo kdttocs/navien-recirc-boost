@@ -34,7 +34,8 @@ you a **Boost** button that heats the hot-water loop anyway, then puts your sche
 | Boosts today, Boosts total, Last boost (sensors) | Boost tracker; kept across restarts. "Today" resets at midnight |
 | Return water temperature, Outlet temperature (sensors) | Water coming back to / leaving the heater |
 | NaviLink connected (binary sensor) | Cloud connection status |
-| Boost stop offset, Boost extra minutes, Boost safety cap (numbers) | The boost settings, under **Configuration** on the device page; add them to any dashboard |
+| Boost 1 · Stop this close to target, Boost 2 · Extra run once hot, Boost 3 · Never run longer than (numbers) | The boost settings, under **Configuration** on the device page. A boost stops when the return water is within the first setting of the heater's target (e.g. 5 °F), keeps going for the extra minutes, and never runs past the third |
+| Schedule 1 · Sunday ... Schedule 7 · Saturday (text) | Each day's hot-water times, under **Configuration** on the device page. Type e.g. `6am-8am, 5:30pm-9pm`, `06:00-08:00`, or `off` (up to 4 windows a day); it's sent to the heater when you press Enter |
 
 Actions (services) for automations: `navien_recirc_boost.boost` (optionally override the stop offset, extra minutes and
 safety cap), `navien_recirc_boost.stop_boost`, `navien_recirc_boost.refresh_schedule`, and
@@ -66,7 +67,8 @@ Settings > Devices & services > Navien NaviLink Recirc Boost > ⋮ > Delete, the
 If a boost is running, stop it first so your schedule is restored.
 
 ### Settings
-The easiest way is the schedule card above, and the boost settings on the device page (or on a dashboard).
+The easiest way is the device page (Settings > Devices & services > Navien NaviLink Recirc Boost > your heater), whose
+**Configuration** section has the three boost settings and one schedule row per day, or the schedule card above.
 They can also be changed under Settings > Devices & services > Navien NaviLink Recirc Boost > **Configure**:
 - **Boost settings**: stop offset (degrees below target, e.g. 3, 4, 5), extra run time, safety cap.
 - **Weekly schedule**: shows the heater's whole week as read from the heater, one line per day, plus a

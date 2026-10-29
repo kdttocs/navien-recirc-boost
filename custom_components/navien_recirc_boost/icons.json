@@ -54,6 +54,29 @@
       "max_minutes": {
         "default": "mdi:timer-alert-outline"
       }
+    },
+    "text": {
+      "schedule_sunday": {
+        "default": "mdi:calendar-clock"
+      },
+      "schedule_monday": {
+        "default": "mdi:calendar-clock"
+      },
+      "schedule_tuesday": {
+        "default": "mdi:calendar-clock"
+      },
+      "schedule_wednesday": {
+        "default": "mdi:calendar-clock"
+      },
+      "schedule_thursday": {
+        "default": "mdi:calendar-clock"
+      },
+      "schedule_friday": {
+        "default": "mdi:calendar-clock"
+      },
+      "schedule_saturday": {
+        "default": "mdi:calendar-clock"
+      }
     }
   },
   "services": {

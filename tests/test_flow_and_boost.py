@@ -183,13 +183,28 @@ async def test_week_service_and_boost_setting_numbers(hass: HomeAssistant, fake_
     with pytest.raises(ServiceValidationError):
         await hass.services.async_call(DOMAIN, "set_week_schedule", {"monday": "09:00-08:00"}, blocking=True)
 
-    offset = "number.npe2_recirc_boost_boost_stop_offset"
+    offset = "number.npe2_recirc_boost_boost_1_stop_this_close_to_target"
     assert hass.states.get(offset).state in ("5", "5.0")
     await hass.services.async_call("number", "set_value", {"entity_id": offset, "value": 8}, blocking=True)
     await hass.services.async_call(
-        "number", "set_value", {"entity_id": "number.npe2_recirc_boost_boost_safety_cap", "value": 20}, blocking=True
+        "number", "set_value", {"entity_id": "number.npe2_recirc_boost_boost_3_never_run_longer_than", "value": 20}, blocking=True
     )
     await hass.async_block_till_done()
     assert entry.options["stop_offset"] == 8 and entry.options["max_minutes"] == 20
     assert hass.states.get(offset).state in ("8", "8.0")
-    assert hass.states.get("number.npe2_recirc_boost_boost_extra_minutes").state in ("2", "2.0")
+    assert hass.states.get("number.npe2_recirc_boost_boost_2_extra_run_once_hot").state in ("2", "2.0")
+
+
+async def test_day_text_rows(hass: HomeAssistant, fake_client):
+    import pytest
+    from homeassistant.exceptions import ServiceValidationError
+    await _setup(hass)
+    client = fake_client.instances[-1]
+    mon = "text.npe2_recirc_boost_schedule_2_monday"
+    assert hass.states.get(mon).state == "4am-8am, 3:30pm-9pm"
+    await hass.services.async_call("text", "set_value", {"entity_id": mon, "value": "6-8am, 5:30pm-12am"}, blocking=True)
+    assert client.writes[-1][1] == [{"day": 2, "schdCnt": 4, "schdList": [
+        {"num": 1, "hh": 6, "mm": 0, "flag": 1}, {"num": 2, "hh": 8, "mm": 0, "flag": 2},
+        {"num": 3, "hh": 17, "mm": 30, "flag": 1}, {"num": 4, "hh": 23, "mm": 59, "flag": 2}]}]
+    with pytest.raises(ServiceValidationError):
+        await hass.services.async_call("text", "set_value", {"entity_id": mon, "value": "9am-8am"}, blocking=True)

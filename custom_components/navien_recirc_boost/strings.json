@@ -128,13 +128,36 @@
         "name": "Target temperature"
       },
       "stop_offset": {
-        "name": "Boost stop offset"
+        "name": "Boost 1 · Stop this close to target"
       },
       "extra_minutes": {
-        "name": "Boost extra minutes"
+        "name": "Boost 2 · Extra run once hot"
       },
       "max_minutes": {
-        "name": "Boost safety cap"
+        "name": "Boost 3 · Never run longer than"
+      }
+    },
+    "text": {
+      "schedule_sunday": {
+        "name": "Schedule 1 · Sunday"
+      },
+      "schedule_monday": {
+        "name": "Schedule 2 · Monday"
+      },
+      "schedule_tuesday": {
+        "name": "Schedule 3 · Tuesday"
+      },
+      "schedule_wednesday": {
+        "name": "Schedule 4 · Wednesday"
+      },
+      "schedule_thursday": {
+        "name": "Schedule 5 · Thursday"
+      },
+      "schedule_friday": {
+        "name": "Schedule 6 · Friday"
+      },
+      "schedule_saturday": {
+        "name": "Schedule 7 · Saturday"
       }
     }
   },
