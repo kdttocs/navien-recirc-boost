@@ -61,7 +61,9 @@ class FakeClient:
 
     async def async_login(self):
         if self.password == "bad":
-            from custom_components.navien_recirc_boost.navilink import AuthenticationError
+            from custom_components.navien_recirc_boost.navilink import (
+                AuthenticationError,
+            )
             raise AuthenticationError("bad")
         return self.devices
 

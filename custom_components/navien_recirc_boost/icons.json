@@ -1,31 +1,76 @@
 {
   "entity": {
     "button": {
-      "boost": {"default": "mdi:water-boiler"},
-      "stop_boost": {"default": "mdi:stop-circle-outline"}
+      "boost": {
+        "default": "mdi:water-boiler"
+      },
+      "stop_boost": {
+        "default": "mdi:stop-circle-outline"
+      }
     },
     "binary_sensor": {
-      "boost_running": {"default": "mdi:water-boiler-off", "state": {"on": "mdi:water-boiler"}}
+      "boost_running": {
+        "default": "mdi:water-boiler-off",
+        "state": {
+          "on": "mdi:water-boiler"
+        }
+      }
     },
     "sensor": {
-      "schedule": {"default": "mdi:calendar-clock"},
-      "boosts_today": {"default": "mdi:counter"},
-      "boosts_total": {"default": "mdi:counter"},
-      "last_boost": {"default": "mdi:history"},
-      "return_temperature": {"default": "mdi:thermometer-water"},
-      "outlet_temperature": {"default": "mdi:thermometer-water"}
+      "schedule": {
+        "default": "mdi:calendar-clock"
+      },
+      "boosts_today": {
+        "default": "mdi:counter"
+      },
+      "boosts_total": {
+        "default": "mdi:counter"
+      },
+      "last_boost": {
+        "default": "mdi:history"
+      },
+      "return_temperature": {
+        "default": "mdi:thermometer-water"
+      },
+      "outlet_temperature": {
+        "default": "mdi:thermometer-water"
+      }
     },
     "switch": {
-      "weekly_schedule": {"default": "mdi:calendar-clock"}
+      "weekly_schedule": {
+        "default": "mdi:calendar-clock"
+      }
     },
     "number": {
-      "target_temperature": {"default": "mdi:thermometer"}
+      "target_temperature": {
+        "default": "mdi:thermometer"
+      },
+      "stop_offset": {
+        "default": "mdi:thermometer-minus"
+      },
+      "extra_minutes": {
+        "default": "mdi:timer-plus-outline"
+      },
+      "max_minutes": {
+        "default": "mdi:timer-alert-outline"
+      }
     }
   },
   "services": {
-    "boost": {"service": "mdi:water-boiler"},
-    "stop_boost": {"service": "mdi:stop-circle-outline"},
-    "refresh_schedule": {"service": "mdi:calendar-refresh"},
-    "set_day_schedule": {"service": "mdi:calendar-edit"}
+    "boost": {
+      "service": "mdi:water-boiler"
+    },
+    "stop_boost": {
+      "service": "mdi:stop-circle-outline"
+    },
+    "refresh_schedule": {
+      "service": "mdi:calendar-refresh"
+    },
+    "set_day_schedule": {
+      "service": "mdi:calendar-edit"
+    },
+    "set_week_schedule": {
+      "service": "mdi:calendar-week"
+    }
   }
 }

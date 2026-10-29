@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 import logging
+from collections.abc import Mapping
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigEntryState,
@@ -29,11 +28,11 @@ from .const import (
     CONF_STOP_OFFSET,
     CONF_USERNAME,
     DAY_NAMES,
-    WEEKLY_OFF,
     DEFAULT_EXTRA_MINUTES,
     DEFAULT_MAX_MINUTES,
     DEFAULT_STOP_OFFSET,
     DOMAIN,
+    WEEKLY_OFF,
 )
 from .navilink import AuthenticationError, NavilinkClient, NavilinkError, NoDevicesError
 from .schedule import ScheduleError, build_day, describe, parse_windows
@@ -89,7 +88,7 @@ class NavienRecircConfigFlow(ConfigFlow, domain=DOMAIN):
             errors["base"] = "no_devices"
         except NavilinkError:
             errors["base"] = "cannot_connect"
-        except Exception:  # noqa: BLE001
+        except Exception:
             _LOGGER.exception("Unexpected error signing in to NaviLink")
             errors["base"] = "unknown"
         else:

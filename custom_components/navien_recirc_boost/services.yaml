@@ -58,3 +58,40 @@ set_day_schedule:
       example: "06:00-08:00, 17:30-21:00"
       selector:
         text:
+set_week_schedule:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: navien_recirc_boost
+    enabled:
+      selector:
+        boolean:
+    sunday:
+      example: "06:00-08:00, 17:30-21:00"
+      selector:
+        text:
+    monday:
+      example: "06:00-08:00, 17:30-21:00"
+      selector:
+        text:
+    tuesday:
+      example: "06:00-08:00, 17:30-21:00"
+      selector:
+        text:
+    wednesday:
+      example: "06:00-08:00, 17:30-21:00"
+      selector:
+        text:
+    thursday:
+      example: "06:00-08:00, 17:30-21:00"
+      selector:
+        text:
+    friday:
+      example: "06:00-08:00, 17:30-21:00"
+      selector:
+        text:
+    saturday:
+      example: "06:00-08:00, 17:30-21:00"
+      selector:
+        text:

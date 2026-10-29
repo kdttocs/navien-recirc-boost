@@ -126,6 +126,15 @@
     "number": {
       "target_temperature": {
         "name": "Target temperature"
+      },
+      "stop_offset": {
+        "name": "Boost stop offset"
+      },
+      "extra_minutes": {
+        "name": "Boost extra minutes"
+      },
+      "max_minutes": {
+        "name": "Boost safety cap"
       }
     }
   },
@@ -186,6 +195,48 @@
         },
         "windows": {
           "name": "Windows",
+          "description": "24-hour windows like 06:00-08:00, 17:30-21:00, or off."
+        }
+      }
+    },
+    "set_week_schedule": {
+      "name": "Set weekly schedule",
+      "description": "Replace one or more days' recirculation windows (and optionally turn the schedule on or off) in one change. Days left out stay as they are.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Heater",
+          "description": "Only needed if more than one heater is set up."
+        },
+        "enabled": {
+          "name": "Schedule on",
+          "description": "Turn the weekly schedule on or off. Leave out to keep it as it is."
+        },
+        "sunday": {
+          "name": "Sunday",
+          "description": "24-hour windows like 06:00-08:00, 17:30-21:00, or off."
+        },
+        "monday": {
+          "name": "Monday",
+          "description": "24-hour windows like 06:00-08:00, 17:30-21:00, or off."
+        },
+        "tuesday": {
+          "name": "Tuesday",
+          "description": "24-hour windows like 06:00-08:00, 17:30-21:00, or off."
+        },
+        "wednesday": {
+          "name": "Wednesday",
+          "description": "24-hour windows like 06:00-08:00, 17:30-21:00, or off."
+        },
+        "thursday": {
+          "name": "Thursday",
+          "description": "24-hour windows like 06:00-08:00, 17:30-21:00, or off."
+        },
+        "friday": {
+          "name": "Friday",
+          "description": "24-hour windows like 06:00-08:00, 17:30-21:00, or off."
+        },
+        "saturday": {
+          "name": "Saturday",
           "description": "24-hour windows like 06:00-08:00, 17:30-21:00, or off."
         }
       }

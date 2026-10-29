@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 import voluptuous as vol
-
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, ServiceCall
@@ -15,14 +15,19 @@ from homeassistant.helpers.typing import ConfigType
 
 from .boost import BoostController
 from .const import (
+    CARD_FILE,
+    CARD_URL,
     CONF_EXTRA_MINUTES,
     CONF_MAX_MINUTES,
     CONF_STOP_OFFSET,
+    DAY_NAMES,
     DOMAIN,
     SERVICE_BOOST,
     SERVICE_REFRESH_SCHEDULE,
     SERVICE_SET_DAY_SCHEDULE,
+    SERVICE_SET_WEEK_SCHEDULE,
     SERVICE_STOP_BOOST,
+    WEEKLY_OFF,
 )
 from .coordinator import NavienRecircConfigEntry, NavienRecircCoordinator
 from .schedule import ScheduleError, build_day, day_number, parse_windows
@@ -42,6 +47,7 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 ATTR_CONFIG_ENTRY = "config_entry_id"
 ATTR_DAY = "day"
 ATTR_WINDOWS = "windows"
+ATTR_ENABLED = "enabled"
 
 _ENTRY = {vol.Optional(ATTR_CONFIG_ENTRY): cv.string}
 BOOST_SCHEMA = vol.Schema(
@@ -55,6 +61,14 @@ BOOST_SCHEMA = vol.Schema(
 ENTRY_ONLY_SCHEMA = vol.Schema(_ENTRY)
 SET_DAY_SCHEMA = vol.Schema(
     {**_ENTRY, vol.Required(ATTR_DAY): cv.string, vol.Required(ATTR_WINDOWS): cv.string}
+)
+
+SET_WEEK_SCHEMA = vol.Schema(
+    {
+        **_ENTRY,
+        vol.Optional(ATTR_ENABLED): cv.boolean,
+        **{vol.Optional(name): cv.string for name in DAY_NAMES.values()},
+    }
 )
 
 
@@ -97,6 +111,24 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             raise ServiceValidationError(str(err)) from err
         await coord.async_set_day(day)
 
+    async def set_week_schedule(call: ServiceCall) -> None:
+        coord = _coordinator(hass, call)
+        days = []
+        for num, name in DAY_NAMES.items():
+            if name not in call.data:
+                continue
+            try:
+                days.append(build_day(num, parse_windows(call.data[name])))
+            except ScheduleError as err:
+                raise ServiceValidationError(f"{name.title()}: {err}") from err
+        if coord.boost.running:
+            raise ServiceValidationError("A boost is running; change the schedule after it finishes")
+        enabled = call.data.get(ATTR_ENABLED)
+        if enabled is None:
+            await coord.async_live_schedule()
+            enabled = coord.weekly_control != WEEKLY_OFF
+        await coord.async_set_week(bool(enabled), days)
+
     hass.services.async_register(DOMAIN, SERVICE_BOOST, boost, schema=BOOST_SCHEMA)
     hass.services.async_register(DOMAIN, SERVICE_STOP_BOOST, stop_boost, schema=ENTRY_ONLY_SCHEMA)
     hass.services.async_register(
@@ -105,7 +137,28 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     hass.services.async_register(
         DOMAIN, SERVICE_SET_DAY_SCHEDULE, set_day_schedule, schema=SET_DAY_SCHEMA
     )
+    hass.services.async_register(
+        DOMAIN, SERVICE_SET_WEEK_SCHEDULE, set_week_schedule, schema=SET_WEEK_SCHEMA
+    )
+    await _async_register_card(hass)
     return True
+
+
+async def _async_register_card(hass: HomeAssistant) -> None:
+    """Serve the schedule card and load it on every dashboard (no manual resource step)."""
+    if getattr(hass, "http", None) is None:
+        return  # no web server (tests)
+    try:
+        from homeassistant.components.frontend import add_extra_js_url
+        from homeassistant.components.http import StaticPathConfig
+        from homeassistant.loader import async_get_integration
+
+        version = (await async_get_integration(hass, DOMAIN)).version
+        path = Path(__file__).parent / "frontend" / CARD_FILE
+        await hass.http.async_register_static_paths([StaticPathConfig(CARD_URL, str(path), False)])
+        add_extra_js_url(hass, f"{CARD_URL}?v={version}")
+    except Exception:
+        _LOGGER.warning("Could not register the schedule card", exc_info=True)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: NavienRecircConfigEntry) -> bool:

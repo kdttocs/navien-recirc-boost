@@ -52,3 +52,8 @@ SERVICE_BOOST: Final = "boost"
 SERVICE_STOP_BOOST: Final = "stop_boost"
 SERVICE_SET_DAY_SCHEDULE: Final = "set_day_schedule"
 SERVICE_REFRESH_SCHEDULE: Final = "refresh_schedule"
+SERVICE_SET_WEEK_SCHEDULE: Final = "set_week_schedule"
+
+# Dashboard card served by the integration.
+CARD_URL: Final = "/navien_recirc_boost/navien-schedule-card.js"
+CARD_FILE: Final = "navien-schedule-card.js"

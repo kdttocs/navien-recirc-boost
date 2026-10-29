@@ -34,10 +34,26 @@ you a **Boost** button that heats the hot-water loop anyway, then puts your sche
 | Boosts today, Boosts total, Last boost (sensors) | Boost tracker; kept across restarts. "Today" resets at midnight |
 | Return water temperature, Outlet temperature (sensors) | Water coming back to / leaving the heater |
 | NaviLink connected (binary sensor) | Cloud connection status |
+| Boost stop offset, Boost extra minutes, Boost safety cap (numbers) | The boost settings, under **Configuration** on the device page; add them to any dashboard |
 
 Actions (services) for automations: `navien_recirc_boost.boost` (optionally override the stop offset, extra minutes and
 safety cap), `navien_recirc_boost.stop_boost`, `navien_recirc_boost.refresh_schedule`, and
-`navien_recirc_boost.set_day_schedule` (e.g. `day: monday`, `windows: "06:00-08:00, 17:30-21:00"`, or `off`).
+`navien_recirc_boost.set_day_schedule` (e.g. `day: monday`, `windows: "06:00-08:00, 17:30-21:00"`, or `off`), and
+`navien_recirc_boost.set_week_schedule` (any days at once, e.g. `tuesday: "06:00-08:00"`, `saturday: "off"`, plus an
+optional `enabled` to turn the schedule on or off).
+
+### Schedule card
+The integration adds a dashboard card, so there is nothing else to install. Edit a dashboard > Add card >
+**Navien hot water schedule** (or add `type: custom:navien-schedule-card` in YAML).
+
+- One row per day across 24 hours. Drag across a row to turn hot water on, drag over orange to turn it off.
+  Drag down across rows to set several days at once. Up to 4 windows a day.
+- A switch in the corner turns the heater's schedule on or off.
+- Press **Save** to send the changed days to the heater in one go, or **Discard** to start over.
+- Options: `entity` (the Schedule sensor; found on its own), `title`, `step` (15, 30 or 60 minutes per cell, default 30),
+  `first_day` (`sunday` or `monday`).
+
+Days you don't touch keep their exact times, even if they don't line up with the grid.
 
 ### Install
 1. In HACS: ⋮ > Custom repositories > add `https://github.com/kdttocs/navien-recirc-boost`, type **Integration**.
@@ -50,7 +66,8 @@ Settings > Devices & services > Navien NaviLink Recirc Boost > ⋮ > Delete, the
 If a boost is running, stop it first so your schedule is restored.
 
 ### Settings
-Settings > Devices & services > Navien NaviLink Recirc Boost > **Configure**:
+The easiest way is the schedule card above, and the boost settings on the device page (or on a dashboard).
+They can also be changed under Settings > Devices & services > Navien NaviLink Recirc Boost > **Configure**:
 - **Boost settings**: stop offset (degrees below target, e.g. 3, 4, 5), extra run time, safety cap.
 - **Weekly schedule**: shows the heater's whole week as read from the heater, one line per day, plus a
   Schedule on switch. Edit any day (24-hour clock, up to 4 windows like `06:00-08:00, 17:30-21:00`, or `off`)

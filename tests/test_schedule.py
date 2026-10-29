@@ -1,8 +1,14 @@
 import pytest
 
 from custom_components.navien_recirc_boost.schedule import (
-    ScheduleError, build_day, day_number, day_windows, describe, parse_windows,
+    ScheduleError,
+    build_day,
+    day_number,
+    day_windows,
+    describe,
+    parse_windows,
 )
+
 from .conftest import SCHEDULE
 
 

@@ -87,7 +87,7 @@ class BoostsTodaySensor(_CounterBase):
     @property
     def native_value(self) -> int:
         """Today's count."""
-        self.coordinator._roll_day()  # noqa: SLF001 — cheap date check
+        self.coordinator._roll_day()
         return int(self.coordinator.saved.get("boosts_today", 0))
 
 

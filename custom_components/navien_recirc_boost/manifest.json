@@ -1,6 +1,10 @@
 {
   "domain": "navien_recirc_boost",
   "name": "Navien NaviLink Recirc Boost",
+  "after_dependencies": [
+    "frontend",
+    "http"
+  ],
   "categories": [
     "climate.water_heaters"
   ],
@@ -19,5 +23,5 @@
   "requirements": [
     "paho-mqtt>=1.6.1"
   ],
-  "version": "0.2.0"
+  "version": "0.3.0"
 }

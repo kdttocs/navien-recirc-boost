@@ -2,8 +2,8 @@ from unittest.mock import patch
 
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
-from homeassistant.util.unit_system import US_CUSTOMARY_SYSTEM
 from homeassistant.data_entry_flow import FlowResultType
+from homeassistant.util.unit_system import US_CUSTOMARY_SYSTEM
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.navien_recirc_boost.const import DOMAIN
@@ -165,3 +165,31 @@ async def test_services_and_switch_and_number(hass: HomeAssistant, fake_client):
     assert hass.states.get("switch.npe2_recirc_boost_weekly_schedule").state == "off"
     await hass.services.async_call("number", "set_value", {"entity_id": "number.npe2_recirc_boost_target_temperature", "value": 125}, blocking=True)
     assert client.channels[1].temps == [125]
+
+
+async def test_week_service_and_boost_setting_numbers(hass: HomeAssistant, fake_client):
+    entry = await _setup(hass)
+    client = fake_client.instances[-1]
+    await hass.services.async_call(
+        DOMAIN, "set_week_schedule",
+        {"tuesday": "06:00-08:00, 17:00-23:59", "thursday": "off"}, blocking=True,
+    )
+    enabled, days = client.writes[-1]
+    assert enabled is True
+    assert [d["day"] for d in days] == [3, 5]
+    assert days[0]["schdCnt"] == 4 and days[1]["schdCnt"] == 0
+    import pytest
+    from homeassistant.exceptions import ServiceValidationError
+    with pytest.raises(ServiceValidationError):
+        await hass.services.async_call(DOMAIN, "set_week_schedule", {"monday": "09:00-08:00"}, blocking=True)
+
+    offset = "number.npe2_recirc_boost_boost_stop_offset"
+    assert hass.states.get(offset).state in ("5", "5.0")
+    await hass.services.async_call("number", "set_value", {"entity_id": offset, "value": 8}, blocking=True)
+    await hass.services.async_call(
+        "number", "set_value", {"entity_id": "number.npe2_recirc_boost_boost_safety_cap", "value": 20}, blocking=True
+    )
+    await hass.async_block_till_done()
+    assert entry.options["stop_offset"] == 8 and entry.options["max_minutes"] == 20
+    assert hass.states.get(offset).state in ("8", "8.0")
+    assert hass.states.get("number.npe2_recirc_boost_boost_extra_minutes").state in ("2", "2.0")
